@@ -1,4 +1,3 @@
-apache-airflow==2.9.0
 requests
 pandas
 boto3
@@ -6,4 +5,5 @@ pyyaml
 prometheus-client
 pytest
 flake8
+
 
