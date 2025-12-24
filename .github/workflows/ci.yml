@@ -1,4 +1,4 @@
-name: CI - GitHub Ingestion Pipeline
+name: CI - GitHub Ingestion Pipelines
 
 on:
   push:
