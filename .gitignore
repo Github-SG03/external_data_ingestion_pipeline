@@ -1,0 +1,37 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+
+# Private keys
+*.pem
+ec2_etl_instance.pem
+
+# Logs and runtime files
+logs/
+*.log
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE/editor settings
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Test / coverage
+.pytest_cache/
+coverage.xml
+
+# Python cache / build
+.mypy_cache/
+build/
+dist/
+.ec2_etl_instance.pem
