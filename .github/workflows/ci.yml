@@ -27,6 +27,7 @@ jobs:
       - name: Lint (flake8)
         run: |
           flake8 airflow/plugins airflow/dags \
+            --ignore=E501,W503flake8 . --exclude=.git,__pycache__ \
             --ignore=E501,W503
 
       - name: Unit test ingestion logic
