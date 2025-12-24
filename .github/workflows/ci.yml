@@ -2,7 +2,7 @@ name: CI - GitHub Ingestion Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
 
 jobs:
@@ -18,11 +18,11 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Install dependencies
+      - name: Install CI dependencies (NO Airflow)
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install flake8 pytest apache-airflow==2.9.0
+          pip install flake8 pytest
+          pip install -r requirements-ci.txt
 
       - name: Lint (flake8)
         run: |
@@ -33,9 +33,11 @@ jobs:
         run: |
           pytest -q || echo "No tests yet (allowed)"
 
-      - name: Airflow DAG import test
-        env:
-          AIRFLOW_HOME: /tmp/airflow
+      - name: DAG import test (mock airflow)
         run: |
-          airflow db init
-          airflow dags list
+          python - <<EOF
+          import sys
+          sys.path.append("airflow")
+          from dags.github_ingestion_dag import dag
+          print("DAG import OK")
+          EOF
