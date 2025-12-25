@@ -6,7 +6,7 @@ import pandas as pd
 import requests
 import yaml
 
-from github_pipeline.metrics import PipelineMetrics
+from github_pipeline.metrics.metrics import PipelineMetrics
 
 
 def load_config():
@@ -64,3 +64,4 @@ def run_github_etl(**context):
 
     metrics.increment("success_total")
     print("🎉 GitHub ingestion completed successfully")
+
