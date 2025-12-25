@@ -47,6 +47,3 @@ jobs:
           import github_pipeline.github_ingestion
           print("DAG import OK")
           EOF
-b_pipeline.github_ingestion
-         print("DAG import OK")
-         EOF
