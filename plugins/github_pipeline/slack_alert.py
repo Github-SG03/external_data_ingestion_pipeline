@@ -1,4 +1,3 @@
-import json
 import requests
 from airflow.models import Variable
 
@@ -20,6 +19,7 @@ def notify_slack_failure(context):
     }
 
     requests.post(webhook, json=message, timeout=10)
+
 
 def notify_slack_success(context):
     webhook = Variable.get("SLACK_WEBHOOK")
