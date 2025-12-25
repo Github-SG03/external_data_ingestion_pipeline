@@ -8,15 +8,19 @@ except ImportError:
 from datetime import datetime, timedelta
 
 from github_pipeline.github_ingestion import run_github_etl
-from github_pipeline.slack_alert import notify_slack
+from github_pipeline.slack_alert import (
+    notify_slack_failure,
+    notify_slack_success,
+)
+
 
 
 default_args = {
     "owner": "data-engineering",
     "retries": 2,
     "retry_delay": timedelta(minutes=5),
-    "on_failure_callback": notify_slack,
-    "on_success_callback": notify_slack,
+    "on_failure_callback": notify_slack_failure,
+    "on_success_callback": notify_slack_success,
 }
 
 
@@ -31,4 +35,5 @@ with DAG(
     github_task = PythonOperator(
         task_id="github_etl",
         python_callable=run_github_etl,
+        provide_context=True,
     )
