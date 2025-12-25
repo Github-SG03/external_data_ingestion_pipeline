@@ -33,10 +33,12 @@ jobs:
           pytest -q || echo "No tests yet (allowed)"
 
       - name: DAG import test (mock airflow)
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
-          python - <<EOF
-          import sys
-          sys.path.append(".")
-          import dags.github_ingestion_dag
-          print("DAG import OK")
-          EOF
+         python - <<EOF
+         import sys
+         print("PYTHONPATH:", sys.path)
+         import dags.github_ingestion_dag
+         print("DAG import OK")
+         EOF
