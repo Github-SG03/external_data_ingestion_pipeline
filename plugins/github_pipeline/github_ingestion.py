@@ -64,4 +64,3 @@ def run_github_etl(**context):
 
     metrics.increment("success_total")
     print("🎉 GitHub ingestion completed successfully")
-
