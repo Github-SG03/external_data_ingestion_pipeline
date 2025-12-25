@@ -1,5 +1,10 @@
-from airflow import DAG
-from airflow.operators.python import PythonOperator
+try:
+    from airflow import DAG
+    from airflow.operators.python import PythonOperator
+except ImportError:
+    DAG = object
+    PythonOperator = object
+
 from datetime import datetime, timedelta
 
 from github_pipeline.github_ingestion import run_github_etl
