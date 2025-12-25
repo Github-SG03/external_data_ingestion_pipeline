@@ -13,8 +13,6 @@ from github_pipeline.slack_alert import (
     notify_slack_success,
 )
 
-
-
 default_args = {
     "owner": "data-engineering",
     "retries": 2,
@@ -23,7 +21,6 @@ default_args = {
     "on_success_callback": notify_slack_success,
 }
 
-
 with DAG(
     dag_id="github_ingestion",
     start_date=datetime(2024, 1, 1),
@@ -31,7 +28,6 @@ with DAG(
     catchup=False,
     default_args=default_args,
 ) as dag:
-
     github_task = PythonOperator(
         task_id="github_etl",
         python_callable=run_github_etl,
