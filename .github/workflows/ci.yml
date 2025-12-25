@@ -38,11 +38,15 @@ jobs:
 
       - name: DAG import test (mock airflow)
         env:
-          PYTHONPATH: ${{ github.workspace }}
+          PYTHONPATH: ${{ github.workspace }}/plugins
         run: |
-         python - <<EOF
-         import sys
-         print("PYTHONPATH:", sys.path)
-         import github_pipeline.github_ingestion
+          python - <<EOF
+          import sys
+          print("PYTHONPATH:", sys.path)
+
+          import github_pipeline.github_ingestion
+          print("DAG import OK")
+          EOF
+b_pipeline.github_ingestion
          print("DAG import OK")
          EOF
