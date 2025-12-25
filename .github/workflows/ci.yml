@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Install CI dependencies (NO Airflow req.)
+      - name: Install CI dependencies (NO Airflow)
         run: |
           python -m pip install --upgrade pip
           pip install flake8 pytest
@@ -28,8 +28,7 @@ jobs:
         run: |
           flake8 . --exclude=.git,__pycache__ --ignore=E501,W503
 
-
-      - name: Unit test ingestion logic
+      - name: Unit tests
         run: |
           pytest -q || echo "No tests yet (allowed)"
 
@@ -37,7 +36,7 @@ jobs:
         run: |
           python - <<EOF
           import sys
-          sys.path.append("airflow")
-          from dags.github_ingestion_dag import dag
+          sys.path.append(".")
+          import dags.github_ingestion_dag
           print("DAG import OK")
           EOF
