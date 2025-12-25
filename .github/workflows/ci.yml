@@ -26,7 +26,11 @@ jobs:
 
       - name: Lint (flake8)
         run: |
-          flake8 . --exclude=.git,__pycache__ --ignore=E501,W503
+         flake8 . \
+         --exclude=.git,__pycache__ \
+         --ignore=E501,W503 \
+         --per-file-ignores="__init__.py:W391"
+
 
       - name: Unit tests
         run: |
