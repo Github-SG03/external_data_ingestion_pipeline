@@ -39,6 +39,6 @@ jobs:
          python - <<EOF
          import sys
          print("PYTHONPATH:", sys.path)
-         import dags.github_ingestion_dag
+         import github_pipeline.github_ingestion
          print("DAG import OK")
          EOF
