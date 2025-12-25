@@ -47,3 +47,47 @@ jobs:
           import github_pipeline.github_ingestion
           print("DAG import OK")
           EOF
+
+
+##########################################################################################
+#name: CI - GitHub Ingestion Pipeline
+
+#on:
+#  push:
+#    branches: [ "main" ]
+#  pull_request:
+
+#jobs:
+# ci:
+#    runs-on: ubuntu-latest
+
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+
+#      - name: Set up Python
+#        uses: actions/setup-python@v5
+#        with:
+#          python-version: "3.9"
+
+#      - name: Install dependencies
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install -r requirements.txt
+#          pip install flake8 pytest apache-airflow==2.9.0
+
+#      - name: Lint (flake8)
+#        run: |
+#          flake8 airflow/plugins airflow/dags \
+#            --ignore=E501,W503
+
+#      - name: Unit test ingestion logic
+#        run: |
+#          pytest -q || echo "No tests yet (allowed)"
+
+#      - name: Airflow DAG import test
+#        env:
+#          AIRFLOW_HOME: /tmp/airflow
+#        run: |
+#          airflow db init
+#          airflow dags list
