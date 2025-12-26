@@ -46,7 +46,7 @@ airflow standalone
 
 
 #ssh -i "ec2_etl_instance.pem" ec2-user@ec2-43-204-235-11.ap-south-1.compute.amazonaws.com(Terminal 2)
-#cd external-data-ingestion-pipeline
+#cd external_data_ingestion_pipeline
 #source ~/airflow_env/bin/activate
 #export AIRFLOW_HOME=~/airflow
 #export PYTHONPATH=$AIRFLOW_HOME/plugins
