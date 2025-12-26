@@ -22,10 +22,6 @@
               cd ~/external_data_ingestion_pipeline
               git pull origin main
 
-              source ~/airflow_env/bin/activate
-
-              airflow db upgrade
-              pkill -f airflow || true
-
-              airflow webserver -D
-              airflow scheduler -D
+              git pull origin main
+              chmod +x run_project.sh
+              ./run_project.sh
