@@ -19,13 +19,13 @@ echo "3️⃣ Install dependencies"
 pip install -r requirements.txt
 
 echo "4️⃣ Sync DAGs"
-cp dags/*.py $AIRFLOW_HOME/dags/
+rsync -av --delete dags/ $AIRFLOW_HOME/dags/
 
 echo "5️⃣ Sync plugins"
-cp -r plugins/* $AIRFLOW_HOME/plugins/
+rsync -av --delete plugins/ $AIRFLOW_HOME/plugins/
 
 echo "4️⃣ Sync DAGs"
-cp -r config $AIRFLOW_HOME/
+rsync -av config/ $AIRFLOW_HOME/config/
 
 echo "6️⃣ kill old Airflow"
 pkill -f airflow || true
