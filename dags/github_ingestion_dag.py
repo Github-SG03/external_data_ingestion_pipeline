@@ -8,7 +8,7 @@ except ImportError:
 from datetime import datetime, timedelta
 
 from github_pipeline.github_ingestion import run_github_etl
-from github_pipeline.slack_alert import (
+from github_pipeline.slack_alert.slack_alert import (
     notify_slack_failure,
     notify_slack_success,
 )
