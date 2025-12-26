@@ -12,12 +12,17 @@
         - name: Checkout code
           uses: actions/checkout@v4
 
-        - name: Test SSH
+        - name: Deploy to EC2
           run: |
-           mkdir -p ~/.ssh
-           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
-           chmod 600 ~/.ssh/deploy_key
-           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ec2-user@43.204.235.11 "echo SSH_OK"
+            mkdir -p ~/.ssh
+            echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+            chmod 600 ~/.ssh/deploy_key
+            ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ec2-user@43.204.235.11 << 'EOF'
+            cd ~/external_data_ingestion_pipeline
+            git pull origin main
+            chmod +x run_project.sh
+            ./run_project.sh
+            EOF
 
 
 
