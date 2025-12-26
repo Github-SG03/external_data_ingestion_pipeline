@@ -12,14 +12,14 @@
         - name: Checkout code
           uses: actions/checkout@v4
 
-        - name: Deploy to EC2
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.EC2_HOST }}
-            username: ${{ secrets.EC2_USER }}
-            key: ${{ secrets.EC2_SSH_KEY }}
-            script: |
-              cd ~/external_data_ingestion_pipeline
-              git pull origin main
-              chmod +x run_project.sh
-              ./run_project.sh
+        - name: Setup SSH
+          run: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+            chmod 600 ~/.ssh/deploy_key
+        - name: Deploy
+          run: |
+            ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ec2-user@43.204.235.11 "echo SSH_OK"
+
+
+

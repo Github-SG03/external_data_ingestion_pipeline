@@ -41,6 +41,7 @@ airflow standalone
 
 #ssh -i "ec2_etl_instance.pem" -L 8080:127.0.0.1:8080 ec2-user@ec2-43-204-235-11.ap-south-1.compute.amazonaws.com(Terminal 1)
 #http://ec2-43-204-235-11.ap-south-1.compute.amazonaws.com:8080
+#ssh -i "%USERPROFILE%\.ssh\id_ed25519" ec2-user@43.204.235.11
 
 
 
@@ -88,6 +89,26 @@ airflow standalone
 #Password: sgs99@grafana
 #http://43.204.235.11:9090/  Prometheus
 #http://43.204.235.11:3000/  Grafana
+
+#🔁 HOW CD ACTUALLY WORKS (SIMPLE)
+#FLOW DIAGRAM
+#You (Local)
+#   |
+#   | git push
+#  v
+#GitHub
+#  |
+#   | CD workflow runs
+#   v
+#EC2 (via SSH)
+#  |
+#   | git pull
+#   | restart airflow
+
+
+#👉 EC2 is passive
+#👉 GitHub connects TO EC2
+#👉 EC2 does not push anything
 
 
 
