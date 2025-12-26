@@ -1,0 +1,31 @@
+name: CD - Deploy to EC2 Airflow
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/external_data_ingestion_pipeline
+            git pull origin main
+
+            source ~/airflow_env/bin/activate
+
+            airflow db upgrade
+            pkill -f airflow || true
+
+            airflow webserver -D
+            airflow scheduler -D
