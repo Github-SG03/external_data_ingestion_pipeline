@@ -30,14 +30,17 @@ jobs:
             -o ServerAliveInterval=30 \
             -o ServerAliveCountMax=2 \
             ec2-user@43.204.235.11 << 'EOF'
-              
+
               set -e
               echo "🚀 Connected to EC2"
 
               cd ~/external_data_ingestion_pipeline
 
-              echo "📥 Pull latest code"
-              git pull origin main
+              echo "🔄 Force sync EC2 repo with GitHub (SOURCE OF TRUTH)"
+              git fetch origin
+              git checkout main || git checkout -b main
+              git reset --hard origin/main
+              git clean -fd
 
               echo "🔧 Ensure script executable"
               chmod +x run_project.sh
@@ -45,6 +48,6 @@ jobs:
               echo "▶ Running deployment script"
               ./run_project.sh
 
-              echo "✅ Deployment completed"
+              echo "✅ Deployment completed successfully"
               exit 0
           EOF
