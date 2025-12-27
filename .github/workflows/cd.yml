@@ -1,28 +1,34 @@
-  name: CD - Deploy to EC2 Airflow
+name: CD - Deploy to EC2 Airflow
 
-  on:
-    push:
-      branches: ["main"]
+on:
+  push:
+    branches: ["main"]
 
-  jobs:
-    deploy:
-      runs-on: ubuntu-latest
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-        - name: Deploy to EC2
-          run: |
-            mkdir -p ~/.ssh
-            echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
-            chmod 600 ~/.ssh/deploy_key
-            ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ec2-user@43.204.235.11 << 'EOF'
+      - name: Deploy to EC2
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ec2-user@43.204.235.11 << EOF
+            set -e
             cd ~/external_data_ingestion_pipeline
-            git pull origin main
+
+            echo "🔄 Force sync EC2 repo with GitHub"
+            git fetch origin
+            git checkout main || git checkout -b main
+            git reset --hard origin/main
+            git clean -fd
+
+            echo "▶ Running project"
             chmod +x run_project.sh
             ./run_project.sh
-            EOF
-
-
-
+          EOF

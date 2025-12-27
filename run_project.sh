@@ -29,8 +29,9 @@ echo "6️⃣ Sync config"
 rsync -av config/ $AIRFLOW_HOME/config/
 
 echo "7️⃣ Kill old Airflow"
-pkill -f "airflow scheduler" || true
-pkill -f "airflow webserver" || true
+pkill -f airflow || true
+pkill -f gunicorn || true
+pkill -f uvicorn || true
 sleep 5
 
 echo "▶ Start Airflow (scheduler + webserver)"
