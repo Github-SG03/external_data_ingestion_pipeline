@@ -3,6 +3,7 @@
                                                   # ./run_project.sh
 ##############################################################################################################
 #!/bin/bash
+#!/bin/bash
 set -e
 
 echo "1️⃣ Set Airflow environment"
@@ -13,10 +14,10 @@ export PYTHONPATH=$AIRFLOW_HOME/plugins
 export ENV=dev
 
 echo "2️⃣ Prepare Airflow directories"
-mkdir -p $AIRFLOW_HOME/{dags,plugins,logs}
+mkdir -p $AIRFLOW_HOME/{dags,plugins,logs,config}
 
 echo "3️⃣ Install dependencies"
-pip install -r requirements.txt
+pip install --no-cache-dir -r requirements.txt
 
 echo "4️⃣ Sync DAGs"
 rsync -av --delete dags/ $AIRFLOW_HOME/dags/
@@ -24,18 +25,22 @@ rsync -av --delete dags/ $AIRFLOW_HOME/dags/
 echo "5️⃣ Sync plugins"
 rsync -av --delete plugins/ $AIRFLOW_HOME/plugins/
 
-echo "4️⃣ Sync DAGs"
+echo "6️⃣ Sync config"
 rsync -av config/ $AIRFLOW_HOME/config/
 
-echo "6️⃣ kill old Airflow"
-pkill -f airflow || true
+echo "7️⃣ Kill old Airflow"
+pkill -f "airflow scheduler" || true
+pkill -f "airflow webserver" || true
 pkill -9 -f gunicorn || true
 pkill -9 -f uvicorn || true
 sleep 5
 
-echo "▶ Start Airflow (STANDALONE)"
-nohup airflow scheduler > ~/airflow/scheduler.log 2>&1
-nohup airflow webserver > ~/airflow/webserver.log 2>&1
+echo "▶ Start Airflow (scheduler + webserver)"
+nohup airflow scheduler > $AIRFLOW_HOME/scheduler.log 2>&1 </dev/null &
+nohup airflow webserver > $AIRFLOW_HOME/webserver.log 2>&1 </dev/null &
+
+sleep 10
+echo "✅ Airflow restarted successfully"
 
 
 #######################################################PROJECT EXECUTION STEPS################################
