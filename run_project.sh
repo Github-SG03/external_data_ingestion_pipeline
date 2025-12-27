@@ -46,7 +46,7 @@ airflow standalone
 
 
 
-#ssh -i "ec2_etl_instance.pem" ec2-user@ec2-43-204-235-11.ap-south-1.compute.amazonaws.com(Terminal 2)
+#ssh -i github_actions_key ec2-user@43.204.235.11(Terminal 2)
 #cd external_data_ingestion_pipeline
 #source ~/airflow_env/bin/activate
 #export AIRFLOW_HOME=~/airflow
@@ -70,7 +70,7 @@ airflow standalone
 
 
 
-#ssh -i "ec2_etl_instance.pem" ec2-user@ec2-43-204-235-11.ap-south-1.compute.amazonaws.com(Terminal 3)
+#ssh -i github_actions_key ec2-user@43.204.235.11(Terminal 3)
 #cd external-data-ingestion-pipeline
 ##./run_project.sh
 
