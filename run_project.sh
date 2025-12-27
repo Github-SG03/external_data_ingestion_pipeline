@@ -31,8 +31,6 @@ rsync -av config/ $AIRFLOW_HOME/config/
 echo "7️⃣ Kill old Airflow"
 pkill -f "airflow scheduler" || true
 pkill -f "airflow webserver" || true
-pkill -9 -f gunicorn || true
-pkill -9 -f uvicorn || true
 sleep 5
 
 echo "▶ Start Airflow (scheduler + webserver)"
@@ -41,6 +39,7 @@ nohup airflow webserver > $AIRFLOW_HOME/webserver.log 2>&1 </dev/null &
 
 sleep 10
 echo "✅ Airflow restarted successfully"
+exit 0
 
 
 #######################################################PROJECT EXECUTION STEPS################################
