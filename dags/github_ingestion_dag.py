@@ -1,14 +1,9 @@
-try:
-    from airflow import DAG
-    from airflow.operators.python import PythonOperator
-except ImportError:
-    DAG = object
-    PythonOperator = object
-
+from airflow import DAG
+from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 
-from github_pipeline.github_ingestion import run_github_etl
-from github_pipeline.slack_alert.slack_alert import (
+from plugins.github_pipeline.github_ingestion import run_github_etl
+from plugins.github_pipeline.slack_alert.slack_alert import (
     notify_slack_failure,
     notify_slack_success,
 )

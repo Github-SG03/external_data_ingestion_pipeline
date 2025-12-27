@@ -17,7 +17,7 @@ def load_config():
         return yaml.safe_load(f)
 
 
-def run_github_etl(**context):
+def run_github_etl(ds=None, **kwargs):
     metrics = PipelineMetrics("github_ingestion")
     metrics.increment("runs_total")
 
@@ -52,7 +52,7 @@ def run_github_etl(**context):
     if df.empty:
         raise ValueError("No data fetched from GitHub API")
 
-    date = context.get("ds", datetime.utcnow().date().isoformat())
+    date = datetime.utcnow().date().isoformat()
     output_path = f"{os.environ['AIRFLOW_HOME']}/logs/github_{date}.csv"
 
     df.to_csv(output_path, index=False)
