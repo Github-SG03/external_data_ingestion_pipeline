@@ -31,5 +31,4 @@ with DAG(
     github_task = PythonOperator(
         task_id="github_etl",
         python_callable=run_github_etl,
-        provide_context=True,
     )

@@ -2,33 +2,49 @@ name: CD - Deploy to EC2 Airflow
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to EC2
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ec2-user@43.204.235.11 << EOF
-            set -e
-            cd ~/external_data_ingestion_pipeline
+      - name: Deploy to EC2
+        run: |
+          ssh \
+            -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o BatchMode=yes \
+            -o ConnectTimeout=15 \
+            -o ServerAliveInterval=30 \
+            -o ServerAliveCountMax=2 \
+            ec2-user@43.204.235.11 << 'EOF'
+              
+              set -e
+              echo "🚀 Connected to EC2"
 
-            echo "🔄 Force sync EC2 repo with GitHub"
-            git fetch origin
-            git checkout main || git checkout -b main
-            git reset --hard origin/main
-            git clean -fd
+              cd ~/external_data_ingestion_pipeline
 
-            echo "▶ Running project"
-            chmod +x run_project.sh
-            ./run_project.sh
+              echo "📥 Pull latest code"
+              git pull origin main
+
+              echo "🔧 Ensure script executable"
+              chmod +x run_project.sh
+
+              echo "▶ Running deployment script"
+              ./run_project.sh
+
+              echo "✅ Deployment completed"
+              exit 0
           EOF
