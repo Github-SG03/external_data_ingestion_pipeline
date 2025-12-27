@@ -34,7 +34,8 @@ pkill -9 -f uvicorn || true
 sleep 5
 
 echo "▶ Start Airflow (STANDALONE)"
-airflow standalone
+nohup airflow scheduler > ~/airflow/scheduler.log 2>&1
+nohup airflow webserver > ~/airflow/webserver.log 2>&1
 
 
 #######################################################PROJECT EXECUTION STEPS################################
