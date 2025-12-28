@@ -58,7 +58,7 @@ curl -f http://localhost:8080/health || {
   exit 1
 }
 
-echo "✅ Airflow is healthy and running"
+echo "✅ Airflow is healthy & running"
 exit 0
 
 
