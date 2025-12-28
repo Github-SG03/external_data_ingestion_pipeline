@@ -17,7 +17,7 @@ def load_config():
         return yaml.safe_load(f)
 
 
-def run_github_etl(ds=None, **kwargs):
+def run_github_etl(**kwargs):
     metrics = PipelineMetrics("github_ingestion")
     metrics.increment("runs_total")
 
