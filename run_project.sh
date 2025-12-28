@@ -64,35 +64,39 @@ echo "✅ Deployment successful"
 
 #######################################################PROJECT EXECUTION STEPS################################
 
-#(Terminal 1)-http://ec2-43-204-235-11.ap-south-1.compute.amazonaws.com:8080
+#BROWSER: http://ec2-43-204-235-11.ap-south-1.compute.amazonaws.com:8080
 
 
-
-
-
-#ssh -i github_actions_key ec2-user@43.204.235.11(Terminal 2)
+#ssh -i github_actions_key ec2-user@43.204.235.11(Terminal 1)
 #cd external_data_ingestion_pipeline
 #source ~/airflow_env/bin/activate
 #export AIRFLOW_HOME=~/airflow
-#export PYTHONPATH=$AIRFLOW_HOME/plugins
+#export PYTHONPATH=~/airlow/src
 #export ENV=dev
 #airflow variables get SLACK_WEBHOOK
 #pkill -9 -f airflow || true
 #pkill -9 -f gunicorn || true
 #pkill -9 -f uvicorn || true
 #sleep 5
-#ss -lntp | grep 8080
 #ps aux | grep airflow | grep -E "scheduler|dag-processor|api-server"
+#ss -lntp | grep 8080
+#curl http://localhost:8080/api/v2/health
 #airflow dags list-import-errors
 #airflow dags list | grep github_ingestion
-#airflow dags trigger github_ingestion   datetime.utcnow().strftime("%Y-%m-%d")
+#airflow dags trigger github_ingestion
 #airflow dags list-runs github_ingestion
-#airflow tasks state github_ingestion github_etl manual__2025-12-24T19:18:05+00:00
+#airflow tasks state github_ingestion github_etl manual__2025-12-28T14:40:09.934614+00:00_z8YHdRAY
 #aws s3 ls s3://<your-bucket>/github/date=YYYY-MM-DD/
 #nano ~/airflow/dags/github_ingestion_dag.py
-#nano ~/airflow/plugins/github_pipeline/slack_alert.py
+#nano ~/airflow/src/github_pipeline/slack_alert.py
 
 
+
+#(terminal2:CMD)
+#git status
+# git add .
+#git commit --allow-empty -m ""
+#git push -u origin main
 
 #########################################WORKFLOW ###################################################################
 

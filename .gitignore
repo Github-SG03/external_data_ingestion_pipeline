@@ -35,3 +35,7 @@ coverage.xml
 build/
 dist/
 .ec2_etl_instance.pem
+
+
+# DEMO Txt
+.demo.txt
