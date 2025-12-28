@@ -10,11 +10,11 @@ source ~/airflow_env/bin/activate
 
 export AIRFLOW_HOME=/home/ec2-user/airflow
 export AIRFLOW__CORE__DAGS_FOLDER=$AIRFLOW_HOME/dags
-export PYTHONPATH=$AIRFLOW_HOME/plugins
+export PYTHONPATH=$AIRFLOW_HOME/src
 export ENV=dev
 
 echo "2️⃣ Prepare Airflow directories"
-mkdir -p $AIRFLOW_HOME/{dags,plugins,logs,config}
+mkdir -p $AIRFLOW_HOME/{dags,plugins,logs,src,config}
 
 echo "3️⃣ Install dependencies"
 pip install --no-cache-dir -r requirements.txt
@@ -22,8 +22,8 @@ pip install --no-cache-dir -r requirements.txt
 echo "4️⃣ Sync DAGs"
 rsync -av --delete dags/ $AIRFLOW_HOME/dags/
 
-echo "5️⃣ Sync plugins"
-rsync -av --delete plugins/ $AIRFLOW_HOME/plugins/
+echo "5️⃣ Sync src"
+rsync -av --delete src/ $AIRFLOW_HOME/src/
 
 echo "6️⃣ Sync config"
 rsync -av config/ $AIRFLOW_HOME/config/
