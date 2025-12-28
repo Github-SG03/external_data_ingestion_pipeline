@@ -49,6 +49,7 @@ sleep 5
 
 echo "🔟 Start Airflow"
 nohup airflow scheduler > $AIRFLOW_HOME/scheduler.log 2>&1 &
+nohup airflow dag-processor > $AIRFLOW_HOME/dag-processor.log 2>&1 &
 nohup airflow api-server --port 8080 > $AIRFLOW_HOME/api-server.log 2>&1 &
 
 sleep 20
@@ -93,7 +94,7 @@ ss -lntp | grep -q 8080 || {
 #pkill -9 -f uvicorn || true
 #sleep 5
 #ss -lntp | grep 8080
-#ps aux | grep airflow | grep -E "scheduler|api-server"
+#ps aux | grep airflow | grep -E "scheduler|dag-processor|api-server"
 #airflow dags list-import-errors
 #airflow dags list | grep github_ingestion
 #airflow dags trigger github_ingestion   datetime.utcnow().strftime("%Y-%m-%d")
