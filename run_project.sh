@@ -54,20 +54,20 @@ nohup airflow api-server --port 8080 > $AIRFLOW_HOME/api-server.log 2>&1 &
 
 sleep 20
 
-echo "⏳ Waiting for Airflow API server to start..."
-for i in {1..12}; do
-  if ss -lntp | grep -q 8080; then
-    echo "✅ Airflow API server is listening on 8080"
+echo "⏳ Waiting for Airflow API server..."
+for i in {1..50}; do
+  if curl -sf http://localhost:8080/api/v1/health > /dev/null; then
+    echo "✅ Airflow API server is healthy"
     break
   fi
-
-  echo "⏱️  Not ready yet... retry $i/12"
+  echo "⏳ Not ready yet... retry $i/50"
   sleep 5
 done
 
+
 # final safety check
 ss -lntp | grep -q 8080 || {
-  echo "❌ Airflow API server failed to start after 60 seconds"
+  echo "❌ Airflow API server failed to start after 250 seconds"
   exit 1
 }
 
