@@ -1,4 +1,4 @@
-![CI](HTTPS://GITHUB.COM/GITHUB-SG03/EXTERNAL_DATA_INGESTION_PIPELINE/ACTIONS/WORKFLOWS/CI.YML/BADGE.SVG)
+![CI](https://github.com/Github-SG03/external_data_ingestion_pipeline/actions/workflows/ci.yml/badge.svg)
 ## External Data Ingestion Pipeline(v1)
 
 ## Overview
