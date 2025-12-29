@@ -155,6 +155,8 @@ echo "✅ Deployment successful"
 #Password: sgs99@grafana
 #http://43.204.235.11:9090/  Prometheus
 #http://43.204.235.11:3000/  Grafana
+#curl http://localhost:9100/metrics
+
 
 
 

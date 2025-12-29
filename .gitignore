@@ -38,4 +38,5 @@ dist/
 
 
 # DEMO Txt
+*.txt
 .demo.txt
