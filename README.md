@@ -1,8 +1,5 @@
 <<<<<<< Updated upstream
 ![CI](https://github.com/Github-SG03/external_data_ingestion_pipeline/actions/workflows/ci.yml/badge.svg)
-=======
-![CI](HTTPS://GITHUB.COM/GITHUB-SG03/EXTERNAL_DATA_INGESTION_PIPELINE/ACTIONS/WORKFLOWS/CI.YML/BADGE.SVG)
-
 >>>>>>> Stashed changes
 ## External Data Ingestion Pipeline(v1)
 
