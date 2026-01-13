@@ -24,7 +24,16 @@ def run_github_etl(**kwargs):
     print("📥 Loading config...")
     config = load_config()
 
-    github_repo = config["github"]["repo"]
+    sources = config["sources"]
+
+    for source in sources:
+        if not source["enabled"]:
+            continue
+        
+        if source["type"] == "github":
+            github_repo = source["repo"]
+            # reuse same logic
+
     bucket = config["s3"]["bucket"]
     base_path = config["s3"]["base_path"]
 
@@ -50,7 +59,13 @@ def run_github_etl(**kwargs):
     df = pd.DataFrame(data)
 
     if df.empty:
-        raise ValueError("No data fetched from GitHub API")
+        raise ValueError("DQ FAIL: No rows fetched")
+
+    if "repo" not in df.columns:
+        raise ValueError("DQ FAIL: Missing repo column")
+
+    if df["stars"].isnull().any():
+        raise ValueError("DQ FAIL: Null stars detected")
 
     date = datetime.utcnow().date().isoformat()
     output_path = f"{os.environ['AIRFLOW_HOME']}/logs/github_{date}.csv"
@@ -60,7 +75,14 @@ def run_github_etl(**kwargs):
 
     s3 = boto3.client("s3")
     s3_key = f"{base_path}/date={date}/github_{date}.csv"
-    s3.upload_file(output_path, bucket, s3_key)
+
+    try:
+        s3.upload_file(output_path, bucket, s3_key)
+        print("⚠️ File already exists, skipping upload")
+
+    except s3.exceptions.ClientError:
+        s3.upload_file(output_path, bucket, s3_key)
+        print("⬆️ Uploaded new file to S3")
 
     metrics.increment("success_total")
     print("🎉 GitHub ingestion completed successfully")
