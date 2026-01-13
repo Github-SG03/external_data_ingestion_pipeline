@@ -8,3 +8,6 @@ class PipelineMetrics:
     def increment(self, metric: str):
         with open(self.file, "a") as f:
             f.write(f"{metric} 1\n")
+            metrics.increment("rows_written", len(df))
+            metrics.increment("s3_uploads_total")
+

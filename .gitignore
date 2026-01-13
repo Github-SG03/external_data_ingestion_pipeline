@@ -40,3 +40,9 @@ dist/
 # DEMO Txt
 *.txt
 .demo.txt
+
+
+# Secrets
+*.csv
+*accessKeys*
+
