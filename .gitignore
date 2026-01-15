@@ -44,5 +44,11 @@ dist/
 
 # Secrets
 *.csv
-*accessKeys*
 
+#data
+data/
+
+#keys &pub
+*.key
+github_actions_key
+*.pub
