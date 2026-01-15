@@ -1,54 +1,53 @@
-# Byte-compiled / cache files
+# ======================
+# Python cache / build
+# ======================
 __pycache__/
 *.py[cod]
-*$py.class
+.pytest_cache/
+.mypy_cache/
+build/
+dist/
 
-# Environment files
+# ======================
+# Environment / secrets
+# ======================
 .env
-
-# Private keys
 *.pem
+*.key
+*.pub
+*.csv
 ec2_etl_instance.pem
+github_actions_key
 
-# Logs and runtime files
+# ======================
+# Runtime / generated
+# ======================
 logs/
 *.log
+data/
+images/
 
+# ======================
 # Virtual environments
+# ======================
 venv/
 env/
 .venv/
 
-# IDE/editor settings
+# ======================
+# IDE / OS
+# ======================
 .vscode/
 .idea/
-
-# macOS
 .DS_Store
 
-# Test / coverage
-.pytest_cache/
+# ======================
+# Tests / coverage
+# ======================
 coverage.xml
 
-# Python cache / build
-.mypy_cache/
-build/
-dist/
-.ec2_etl_instance.pem
-
-
-# DEMO Txt
+# ======================
+# Demo / temp
+# ======================
 *.txt
 .demo.txt
-
-
-# Secrets
-*.csv
-
-#data
-data/
-
-#keys &pub
-*.key
-github_actions_key
-*.pub
