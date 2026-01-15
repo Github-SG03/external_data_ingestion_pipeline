@@ -1,0 +1,5 @@
+services:
+  airflow:
+    image: airflow-final
+    ports:
+      - "8080:8080"

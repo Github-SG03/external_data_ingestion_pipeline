@@ -1,9 +1,0 @@
-github:
-  repo: apache/airflow
-  enabled: true
-
-s3:
-  bucket: sgs-dev-data-bucket
-  base_path: github/dev
-  enabled: false
-

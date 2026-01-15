@@ -1,6 +1,0 @@
-github:
-  repo: apache/airflow
-
-s3:
-  bucket: sgs-dev-data-bucket
-  base_path: github/prod
