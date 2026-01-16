@@ -1,4 +1,4 @@
-name: CD - Deploy to EC2 Airflow
+name: CD - Deploy External Data Ingestion Platform
 
 on:
   push:
@@ -36,18 +36,17 @@ jobs:
 
               cd ~/external_data_ingestion_pipeline
 
-              echo "🔄 Force sync EC2 repo with GitHub (SOURCE OF TRUTH)"
+              echo "🔄 Sync EC2 repo with GitHub (SOURCE OF TRUTH)"
               git fetch origin
               git checkout main || git checkout -b main
               git reset --hard origin/main
               git clean -fd
 
-              echo "🔧 Ensure script executable"
-              chmod +x run_project.sh
+              echo "🔧 Ensure deployment script executable"
+              chmod +x scripts/run_project.sh
 
               echo "▶ Running deployment script"
-              ./run_project.sh
+              ./scripts/run_project.sh
 
               echo "✅ Deployment completed successfully"
-              exit 0
           EOF

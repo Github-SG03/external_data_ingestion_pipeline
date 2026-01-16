@@ -1,10 +1,10 @@
-name: CI - GitHub Ingestion Pipeline
+name: CI - External Data Ingestion Platform
 
 on:
   push:
-    branches: 
-     - main
-     - feature/**
+    branches:
+      - main
+      - feature/**
   pull_request:
 
 jobs:
@@ -23,31 +23,31 @@ jobs:
       - name: Install CI dependencies (NO Airflow)
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest
-          pip install -r requirements.txt
+          pip install flake8 pytest black autoflake pyyaml requests boto3 prometheus-client
 
-      - name: Lint (flake8)
+      - name: Lint (flake8 – CI safe)
         run: |
-         flake8 . \
-         --exclude=.git,__pycache__ \
-         --ignore=E501,W503 \
-         --per-file-ignores="__init__.py:W391"
+          flake8 src tests \
+            --exclude=__pycache__,venv \ ,analytics \
+            --ignore=E501,W503 \
+            --per-file-ignores="__init__.py:F401"
 
+      - name: Format check (black)
+        run: |
+          black --check src tests
 
       - name: Unit tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}/src
         run: |
-          pytest -q || echo "No tests yet (allowed)"
+          pytest tests -q || echo "No tests yet (allowed)"
 
-      - name: DAG import test (mock airflow)
+      - name: Sanity import test (NO Airflow)
         env:
           PYTHONPATH: ${{ github.workspace }}/src
         run: |
           python - <<EOF
-          import sys
-          print("PYTHONPATH:", sys.path)
-
-          import github_pipeline.github_ingestion
-          print("DAG import OK")
+          from pipeline.config import load_sources
+          from pipeline.executor import execute_source
+          print("Core pipeline imports OK")
           EOF
-
-
