@@ -1,0 +1,38 @@
+sources:
+  - name: github_airflow
+    type: github
+    owner: apache
+    repo: airflow
+    s3_prefix: github/airflow
+
+  - name: weather_api
+    type: rest_api
+    url: https://api.open-meteo.com/v1/forecast
+    params:
+      latitude: 52.52
+      longitude: 13.41
+    s3_prefix: api/weather
+
+  - name: local_csv
+    type: file
+    path: data/sample.csv
+    s3_prefix: files/sample
+
+  - name: s3_logs
+    type: s3
+    source_bucket: my-raw-bucket
+    prefix: logs/
+    s3_prefix: s3/logs
+
+  - name: smtp_reports
+    type: smtp
+    mailbox: reports@example.com
+    attachment_type: csv
+    s3_prefix: email/reports
+
+  - name: snowflake_table
+    type: snowflake
+    database: DEMO_DB
+    schema: PUBLIC
+    table: SALES
+    s3_prefix: warehouse/snowflake/sales

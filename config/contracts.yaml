@@ -1,0 +1,4 @@
+github:
+  required_columns: ["id", "full_name", "stargazers_count"]
+  owner: "platform-team"
+  sla_hours: 24
