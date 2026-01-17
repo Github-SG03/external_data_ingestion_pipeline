@@ -1,4 +1,5 @@
-## Phase-2(planned)
--Backfill support 
--Config-driven sources
+## Phase-2(Planned Work)
+-Backfill support.
+-Config-driven sources.
+
 
