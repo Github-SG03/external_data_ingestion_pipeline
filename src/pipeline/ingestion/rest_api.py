@@ -2,9 +2,7 @@ import requests
 from typing import Dict, List
 
 
-def run_rest_api_ingestion(
-    source: Dict, run_date: str, bucket: str
-) -> List[Dict]:
+def run_rest_api_ingestion(source: Dict, run_date: str, bucket: str) -> List[Dict]:
     """
     Fetch data from a REST API source.
     This is STEP-2 ingestion logic.
