@@ -67,7 +67,7 @@ echo "✅ Deployment successful"
 #BROWSER: http://ec2-43-204-235-11.ap-south-1.compute.amazonaws.com:8080
 
 
-#ssh -i github_actions_key ec2-user@43.204.235.11(Terminal 1)
+#ssh -i "%USERPROFILE%\.ssh\external-data-ingestion-key.pem" ec2-user@13.204.82.83(Terminal 1)
 #cd external_data_ingestion_pipeline
 #source ~/airflow_env/bin/activate
 #export AIRFLOW_HOME=~/airflow

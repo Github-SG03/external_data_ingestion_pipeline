@@ -29,7 +29,7 @@ jobs:
             -o ConnectTimeout=15 \
             -o ServerAliveInterval=30 \
             -o ServerAliveCountMax=2 \
-            ec2-user@43.204.235.11 << 'EOF'
+            ec2-user@13.204.82.83 << 'EOF'
 
               set -e
               echo "🚀 Connected to EC2"
