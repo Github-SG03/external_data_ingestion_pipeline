@@ -1,7 +1,6 @@
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.utils.dates import days_ago
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from src.pipeline.config import load_sources, load_backfill_config #type: ignore
 from src.pipeline.backfill import get_run_dates
@@ -42,7 +41,7 @@ default_args = {
 with DAG(
     dag_id="external_data_ingestion",
     default_args=default_args,
-    start_date=days_ago(1),
+    start_date=datetime(2024, 1, 1),
     schedule="@daily",
     catchup=False,
     max_active_runs=1,
