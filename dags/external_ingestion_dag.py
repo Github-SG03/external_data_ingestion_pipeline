@@ -2,10 +2,10 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 
-from src.pipeline.config import load_sources, load_backfill_config #type: ignore
-from src.pipeline.backfill import get_run_dates
-from src.pipeline.executor import execute_source
-from src.pipeline.notify.slack import notify_failure, notify_success
+from pipeline.config import load_sources, load_backfill_config #type: ignore
+from pipeline.backfill import get_run_dates
+from pipeline.executor import execute_source
+from pipeline.notify.slack import notify_failure, notify_success
 
 DEFAULT_BUCKET = "company-raw-data"
 
