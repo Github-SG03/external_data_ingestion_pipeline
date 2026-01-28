@@ -1,9 +1,14 @@
-import snowflake.connector
-import json
-from src.ingestion.writer import write_to_s3
+from typing import Dict, List
 
 
-def run_snowflake_etl(source, run_date, bucket):
+def run_snowflake_ingestion(source: Dict, run_date: str, bucket: str) -> List[Dict]:
+    """
+    Read data from Snowflake (read-only).
+    Lazy import to keep CI safe.
+    """
+
+    import snowflake.connector
+
     conn = snowflake.connector.connect(
         user=source["user"],
         password=source["password"],
@@ -13,14 +18,17 @@ def run_snowflake_etl(source, run_date, bucket):
         schema=source["schema"],
     )
 
-    cur = conn.cursor()
-    cur.execute(f"SELECT * FROM {source['table']} LIMIT 1000")
-    rows = cur.fetchall()
-    cols = [c[0] for c in cur.description]
+    cursor = conn.cursor()
 
-    data = [dict(zip(cols, r)) for r in rows]
-    key = f'{source["s3_prefix"]}/dt={run_date}/data.json'
-    write_to_s3(bucket, key, json.dumps(data))
+    query = source["query"]
+    cursor.execute(query)
 
-    cur.close()
+    columns = [col[0] for col in cursor.description]
+    rows = cursor.fetchall()
+
+    records = [dict(zip(columns, row)) for row in rows]
+
+    cursor.close()
     conn.close()
+
+    return records

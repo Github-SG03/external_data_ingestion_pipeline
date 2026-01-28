@@ -50,6 +50,16 @@ def execute_source(source: Dict, run_date: str, bucket: str) -> List[Dict]:
         )
         s3_key = f"{source['s3_prefix']}/dt={run_date}/data.json"
         write_json(bucket=bucket, key=s3_key, records=records)
+    elif source_type == "snowflake":
+        from pipeline.ingestion.snowflake import run_snowflake_ingestion
+
+        records = run_snowflake_ingestion(
+            source=source,
+            run_date=run_date,
+            bucket=bucket,
+        )
+        s3_key = f"{source['s3_prefix']}/dt={run_date}/data.json"
+        write_json(bucket=bucket, key=s3_key, records=records)
     else:
         records = []
 
