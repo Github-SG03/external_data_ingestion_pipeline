@@ -5,46 +5,63 @@
 #!/bin/bash
 set -e
 
-echo "1️⃣ Activate Airflow env"
+echo "=============================="
+echo "🚀 External Data Ingestion Platform – Deployment"
+echo "=============================="
+
+echo "1️⃣ Activate Airflow virtual environment"
 source ~/airflow_env/bin/activate
 
 export AIRFLOW_HOME=/home/ec2-user/airflow
 export AIRFLOW__CORE__DAGS_FOLDER=$AIRFLOW_HOME/dags
+export PYTHONPATH=$AIRFLOW_HOME/src
 export ENV=dev
 
 echo "2️⃣ Prepare Airflow directories"
-mkdir -p $AIRFLOW_HOME/{dags,logs,src,config}
+mkdir -p $AIRFLOW_HOME/dags
+mkdir -p $AIRFLOW_HOME/logs
+mkdir -p $AIRFLOW_HOME/src
+mkdir -p $AIRFLOW_HOME/config
 
-echo "3️⃣ Install dependencies"
+echo "3️⃣ Upgrade pip"
+pip install --upgrade pip
+
+echo "4️⃣ Install Python dependencies"
 pip install --no-cache-dir -r requirements.txt
 
-echo "4️⃣ Install project package (IMPORTANT)"
+echo "5️⃣ Clean old editable installs (SAFE)"
+pip uninstall -y github_pipeline || true
+pip uninstall -y external_data_ingestion_pipeline || true
+rm -f $AIRFLOW_HOME/venv/lib/python*/site-packages/_editable__*.pth || true
+
+echo "6️⃣ Install project package (editable)"
 pip install -e .
 
-echo "5️⃣ Sync DAGs"
+echo "7️⃣ Sync DAGs to Airflow"
 rsync -av --delete dags/ $AIRFLOW_HOME/dags/
 
-echo "6️⃣ Sync src"
+echo "8️⃣ Sync source code"
 rsync -av --delete src/ $AIRFLOW_HOME/src/
 
-echo "7️⃣ Sync config"
+echo "9️⃣ Sync config files"
 rsync -av config/ $AIRFLOW_HOME/config/
 
-echo "8️⃣ Initialize / migrate Airflow DB"
+echo "🔟 Initialize / migrate Airflow DB"
 airflow db migrate
 
-echo "9️⃣ Kill old Airflow"
+echo "1️⃣1️⃣ Stop old Airflow processes"
 pkill -f "airflow scheduler" || true
-pkill -f "airflow webserver" || true
+pkill -f "airflow dag-processor" || true
+pkill -f "airflow api-server" || true
 sleep 5
 
-echo "🔟 Start Airflow services"
+echo "1️⃣2️⃣ Start Airflow services"
 nohup airflow scheduler > $AIRFLOW_HOME/scheduler.log 2>&1 &
 nohup airflow dag-processor > $AIRFLOW_HOME/dag-processor.log 2>&1 &
 nohup airflow api-server --port 8080 > $AIRFLOW_HOME/api-server.log 2>&1 &
 
-echo "⏳ Waiting for Airflow API server..."
-for i in {1..50}; do
+echo "1️⃣3️⃣ Wait for Airflow API health check"
+for i in {1..60}; do
   if curl -sf http://localhost:8080/api/v1/health > /dev/null; then
     echo "✅ Airflow API server is healthy"
     break
@@ -52,15 +69,20 @@ for i in {1..50}; do
   sleep 5
 done
 
-echo "🧪 Checking DAG import errors"
+echo "1️⃣4️⃣ Check DAG import errors"
 IMPORT_ERRORS=$(airflow dags list-import-errors | wc -l)
 if [ "$IMPORT_ERRORS" -gt 1 ]; then
+  echo "❌ DAG import errors detected"
   airflow dags list-import-errors
-  echo "❌ DAG import errors found"
   exit 1
 fi
 
-echo "✅ Deployment successful"
+echo "=============================="
+echo "✅ DEPLOYMENT SUCCESSFUL"
+echo "=============================="
+
+echo "🌐 Airflow UI: http://<EC2-PUBLIC-IP>:8080"
+
 
 #######################################################PROJECT EXECUTION STEPS################################
 
