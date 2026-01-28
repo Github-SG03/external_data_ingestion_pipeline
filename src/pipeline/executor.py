@@ -42,6 +42,7 @@ def execute_source(source: Dict, run_date: str, bucket: str) -> List[Dict]:
         write_json(bucket=bucket, key=s3_key, records=records)
     elif source_type == "sqlserver":
         from pipeline.ingestion.sqlserver import run_sqlserver_ingestion
+
         records = run_sqlserver_ingestion(
             source=source,
             run_date=run_date,
