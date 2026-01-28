@@ -1,6 +1,4 @@
-import time
 from typing import Dict, List
-
 from pipeline.metrics import record_success  # type: ignore
 from pipeline.quality import run_quality_checks  # type: ignore
 from pipeline.config import load_quality_rules  # type: ignore
