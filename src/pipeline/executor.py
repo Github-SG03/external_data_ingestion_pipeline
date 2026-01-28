@@ -7,6 +7,7 @@ from pipeline.config import load_quality_rules  # type: ignore
 from pipeline.ingestion.rest_api import run_rest_api_ingestion
 from pipeline.writer.s3_writer import write_json
 from pipeline.ingestion.file import run_file_ingestion
+from pipeline.ingestion.s3 import run_s3_ingestion
 
 
 def execute_source(source: Dict, run_date: str, bucket: str) -> List[Dict]:
@@ -30,6 +31,16 @@ def execute_source(source: Dict, run_date: str, bucket: str) -> List[Dict]:
         )
         s3_key = f"{source['s3_prefix']}/dt={run_date}/data.json"
         write_json(bucket=bucket, key=s3_key, records=records)
+
+    elif source_type == "s3":
+        records = run_s3_ingestion(
+            source=source,
+            run_date=run_date,
+            bucket=bucket,
+        )
+        s3_key = f"{source['s3_prefix']}/dt={run_date}/data.json"
+        write_json(bucket=bucket, key=s3_key, records=records)
+
     else:
         records = []
 
