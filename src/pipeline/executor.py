@@ -10,7 +10,6 @@ from pipeline.ingestion.file import run_file_ingestion
 from pipeline.ingestion.s3 import run_s3_ingestion
 
 
-
 def execute_source(source: Dict, run_date: str, bucket: str) -> List[Dict]:
     source_name = source["name"]
     source_type = source["type"]
