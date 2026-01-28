@@ -2,6 +2,7 @@ import snowflake.connector
 import json
 from src.ingestion.writer import write_to_s3
 
+
 def run_snowflake_etl(source, run_date, bucket):
     conn = snowflake.connector.connect(
         user=source["user"],

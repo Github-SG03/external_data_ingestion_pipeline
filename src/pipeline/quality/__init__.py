@@ -9,8 +9,10 @@ from src.pipeline.quality.rules import (
     is_hard_fail,
 )
 
+
 class DataQualityException(Exception):
     pass
+
 
 def run_quality_checks(source_name: str, records: list, rule_cfg: dict):
     """
@@ -32,9 +34,7 @@ def run_quality_checks(source_name: str, records: list, rule_cfg: dict):
 
     if failures:
         if is_hard_fail(rule_cfg):
-            raise DataQualityException(
-                f"[HARD FAIL] {source_name}: {failures}"
-            )
+            raise DataQualityException(f"[HARD FAIL] {source_name}: {failures}")
         else:
             # Soft fail: log + continue
             print(f"[DQ WARNING] {source_name}: {failures}")

@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+
 def get_run_dates(backfill_cfg: dict):
     """
     Returns list of dates to run.

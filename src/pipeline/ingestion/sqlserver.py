@@ -6,6 +6,7 @@ from src.pipeline.logging import get_logger
 
 logger = get_logger("SQLServerIngestion")
 
+
 def get_sqlserver_connection():
     return pyodbc.connect(
         driver="{ODBC Driver 17 for SQL Server}",
@@ -14,6 +15,7 @@ def get_sqlserver_connection():
         uid=os.getenv("SQLSERVER_USER"),
         pwd=os.getenv("SQLSERVER_PASSWORD"),
     )
+
 
 def run_sqlserver_ingestion(source: dict, run_date: str, bucket: str):
     """
@@ -42,9 +44,7 @@ def run_sqlserver_ingestion(source: dict, run_date: str, bucket: str):
     key = f"{source['s3_prefix']}/dt={run_date}/data.json"
     write_json(bucket, key, json.dumps(records))
 
-    logger.info(
-        f"Completed SQL Server ingestion for {table} | Rows: {len(records)}"
-    )
+    logger.info(f"Completed SQL Server ingestion for {table} | Rows: {len(records)}")
 
     cursor.close()
     conn.close()

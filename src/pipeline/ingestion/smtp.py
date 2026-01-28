@@ -2,6 +2,7 @@ import imaplib
 import email
 from src.ingestion.writer import write_to_s3
 
+
 def run_smtp_etl(source, run_date, bucket):
     mail = imaplib.IMAP4_SSL(source["host"])
     mail.login(source["user"], source["password"])
