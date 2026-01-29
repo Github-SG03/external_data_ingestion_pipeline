@@ -1,4 +1,4 @@
-from src.pipeline.notify.slack import send_slack
+from pipeline.notify.slack import send_slack
 
 
 def escalate(source: str, failure_count: int):

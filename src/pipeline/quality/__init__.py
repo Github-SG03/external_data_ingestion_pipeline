@@ -1,9 +1,9 @@
-from src.pipeline.quality.checks import (
+from pipeline.quality.checks import (
     check_not_empty,
     check_min_rows,
     check_required_columns,
 )
-from src.pipeline.quality.rules import (
+from pipeline.quality.rules import (
     get_required_columns,
     get_min_rows,
     is_hard_fail,
