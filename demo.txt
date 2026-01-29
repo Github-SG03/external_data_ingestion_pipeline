@@ -1,517 +1,78 @@
-Got it 👍
-You’re **right to pause Docker for now**. Let’s **finish v1 properly**, cleanly, and *professionally*, including **Grafana + Prometheus**, GitHub hygiene, tagging, and what comes **after** — without touching your working pipeline.
+#######################################################PROJECT EXECUTION STEPS###############################################################
+#BROWSER: http://ec2-43-204-235-11.ap-south-1.compute.amazonaws.com:8080
+
+
+
+
+#ssh -i "%USERPROFILE%\.ssh\external-data-ingestion-key.pem" ec2-user@13.204.82.83(Terminal 1-EC2)
+#cd external_data_ingestion_pipeline
+#source ~/airflow_env/bin/activate
+#export AIRFLOW_HOME=~/airflow
+#export PYTHONPATH=~/airlow/src
+#export ENV=dev
+#airflow variables get SLACK_WEBHOOK
+
+#pkill -9 -f airflow || true
+#pkill -9 -f gunicorn || true
+#pkill -9 -f uvicorn || true
+#sleep 5
+
+#ps aux | grep airflow | grep -v grep --Verify Airflow processes
+#ss -lntp | grep 8080 --Verify port is listening
+#curl http://localhost:8080/api/v2/health
+#airflow dags list-import-errors
+#airflow dags list | grep external_data_ingestion
+#airflow dags list-runs external_data_ingestion
+#airflow dags trigger external_data_ingestion
+#airflow tasks state external_data_ingestion run_external_ingestion__2025-12-28T14:40:09.934614+00:00_z8YHdRAY
+#tail -f ~/airflow/logs/dag_id=external_data_ingestion/*/run_external_ingestion/*.log
+#aws s3 ls s3://sgs-dev-data-bucket/github/date=YYYY-MM-DD/
+
+
+
+
+
+
+#C:\Users\Shivam Gupta\OneDrive\Documents\Shivam_Developement\external_data_ingestion_pipeline>(terminal2-CMD)
+#git status
+#git add .
+#git commit --allow-empty -m ""
+#git push -u origin main
+
+#########################################WORKFLOW###########################################################################################
+#🔁 HOW CD ACTUALLY WORKS (SIMPLE):FLOW DIAGRAM
+#You (Local)-GitHub push
+#  |
+#  | git push
+#  v
+#GitHub Actions SSH → EC2
+#  |
+#  | CI-CD workflow runs
+#   v
+#EC2 (via SSH)
+#  |
+#   | git pull
+#   | Sync DAGs & plugins
+#   | restart airflow:Check DAG import errors ❌/✅
+#   |Health check on port 8080
+#   v   
+#Deployment SUCCESS  
+   
+#👉 EC2 is passive
+#👉 GitHub connects TO EC2
+#👉 EC2 does not push anything
+##########################################Crdentials & Link##################################################################################
+#Username: admin
+#Password: spM3QHV5xwUFythk
+#http://127.0.0.1:8080
+
+#Username: admin
+#Password: sgs99@grafana
+#http://43.204.235.11:9090/  Prometheus
+#http://43.204.235.11:3000/  Grafana
+#curl http://localhost:9100/metrics
+#############################################################################################################################################
 
-I’ll break this into **clear sections** so you can **close today calmly** and **restart tomorrow fresh**.
 
----
 
-# ✅ CURRENT REALITY (IMPORTANT)
 
-You now have **v1 = WORKING PRODUCTION PIPELINE**:
-
-* Airflow 3 on EC2
-* CI/CD via GitHub Actions
-* DAG runs successfully
-* Data written to S3
-* Slack alerts working
-* Logs visible
-* No import errors
-* No runtime crashes
-
-👉 **This is your v1 baseline. DO NOT BREAK IT.**
-
----
-
-# 🔍 GRAFANA + PROMETHEUS (YOU DID NOT MISS THIS)
-
-You **did not forget** Grafana/Prometheus — you **already implemented the hard part**.
-
-## What you have right now
-
-* Prometheus running
-* Node exporter running
-* Grafana running
-* You can open dashboards
-
-That’s **Phase-1 monitoring**, which is correct for v1.
-
----
-
-## What should be DONE in v1 (ONLY)
-
-### ✅ 1. Confirm Prometheus targets
-
-On EC2:
-
-```bash
-curl http://localhost:9090/targets
-```
-
-You should see:
-
-* node_exporter → UP
-* prometheus → UP
-
-That’s enough for v1.
-
----
-
-### ✅ 2. Grafana dashboards (minimum)
-
-You **do NOT need fancy dashboards now**.
-
-For v1, just ensure:
-
-* CPU usage
-* Memory usage
-* Disk usage
-
-These 3 prove infra monitoring.
-
-👉 Don’t over-engineer alerts yet.
-
----
-
-### 🚫 What NOT to do now
-
-* Airflow metrics via StatsD
-* Custom exporters
-* Alertmanager rules
-
-Those are **Phase-3** items.
-
----
-
-# 🏷️ TAGGING (YOU ASKED — VERY IMPORTANT)
-
-Think of **tags as milestones**, not versions of code chaos.
-
-### What you should do now
-
-This is your **first stable release**:
-
-```bash
-git tag -a v1.0.0-airflow-prod -m "Stable Airflow ingestion pipeline with CI/CD, S3, Slack"
-git push origin v1.0.0-airflow-prod
-```
-
-### Why tags matter
-
-* Recruiters LOVE tags
-* You can rollback anytime
-* You can safely create new phases without fear
-
----
-
-## How future phases work
-
-| Phase                   | Tag                   |
-| ----------------------- | --------------------- |
-| Current stable          | `v1.0.0-airflow-prod` |
-| Monitoring improvements | `v1.1.0-monitoring`   |
-| Backfill                | `v1.2.0-backfill`     |
-| Docker (later)          | `v2.0.0-docker`       |
-
-👉 **Never modify an old tag**. Always move forward.
-
----
-
-# 📦 “Packages → No packages published” (THIS IS OK)
-
-This is **NOT an error**.
-
-### When GitHub Packages is needed
-
-Only if:
-
-* You publish a PyPI library
-* You publish Docker images
-* You publish reusable SDKs
-
-Your project is:
-
-* an **application**
-* deployed via **CI/CD**
-* not a reusable library
-
-✅ **Correct to ignore for v1**
-
-You can later publish:
-
-* Docker image → GitHub Packages
-* Python wheel → PyPI
-
-But **NOT now**.
-
----
-
-# 🧹 GITHUB PROJECT HYGIENE (FOR v1)
-
-You asked about:
-
-> issues, PRs, wiki, discussions, README, projects, etc.
-
-Here is what is **REQUIRED vs OPTIONAL**.
-
----
-
-## ✅ REQUIRED FOR v1 (DO THESE)
-
-### 1️⃣ README.md (most important)
-
-Your README should include:
-
-**Sections**
-
-```
-# External Data Ingestion Pipeline
-
-## Overview
-## Architecture
-## Tech Stack
-## CI/CD Flow
-## Airflow DAGs
-## How to Run (EC2)
-## Monitoring (Grafana + Prometheus)
-## Alerts (Slack)
-## S3 Output Structure
-```
-
-No long essays. Clear bullets.
-
----
-
-### 2️⃣ Issues
-
-Create **2 example issues** (even if closed):
-
-* “Initial Airflow DAG import error fix”
-* “Add Slack alerts for DAG failures”
-
-This shows **real engineering workflow**.
-
----
-
-### 3️⃣ Pull Requests
-
-Even solo project → create **1 PR**:
-
-* Branch → `feature/slack-alerts`
-* Merge to `main`
-
-Recruiters LOVE this.
-
----
-
-### 4️⃣ GitHub Actions badge
-
-Add this to README:
-
-```md
-![CI](https://github.com/<user>/<repo>/actions/workflows/ci.yml/badge.svg)
-```
-
----
-
-## 🟡 OPTIONAL (DO LATER, NOT TODAY)
-
-| Feature               | When         |
-| --------------------- | ------------ |
-| Wiki                  | After v2     |
-| Discussions           | Optional     |
-| GitHub Projects board | If team work |
-| Gists                 | Not needed   |
-
----
-
-# 📁 FOLDER STRUCTURE IMPROVEMENT (SAFE)
-
-Your current structure is **good**.
-Just minor polish (NO breaking changes):
-
-```
-external_data_ingestion_pipeline/
-├── dags/
-├── src/
-│   └── github_pipeline/
-├── config/
-│   ├── sources.yaml
-│   └── env.dev.yaml
-├── monitoring/
-│   ├── prometheus.yml
-│   └── grafana/
-├── scripts/
-├── tests/
-├── .github/workflows/
-├── run_project.sh
-├── README.md
-```
-
-👉 Don’t move code today. Only **add docs/config**.
-
----
-
-# 🚫 DOCKER — REMOVED FOR NOW (AS REQUESTED)
-
-You asked:
-
-> pls remove docker part for now
-
-✅ Done.
-
-But for **knowledge only**, Docker phase will later include:
-
-* Dockerfile for Airflow
-* docker-compose for local dev
-* Same DAGs, same config
-
-👉 This becomes **v2**, not now.
-
----
-
-# 🗺️ NEXT PHASE OVERVIEW (CALM & CONTROLLED)
-
-### PHASE-1 (DONE)
-
-✔ Airflow
-✔ CI/CD
-✔ S3
-✔ Slack
-✔ Monitoring basics
-
----
-
-### PHASE-2 (NEXT, SMALL)
-
-**Backfill + Config-driven sources**
-
-* Historical runs
-* Idempotent S3 writes
-* Add new sources via config only
-
----
-
-### PHASE-3 (ADVANCED)
-
-* Docker
-* Alertmanager
-* Data quality checks
-* Cost monitoring
-
----
-
-# 🧠 VERY IMPORTANT ADVICE (PLEASE READ)
-
-You did **NOT waste time**.
-
-What took you 10 days is what many people **never complete**.
-
-Now your rule should be:
-
-> **“If it’s working, freeze it.”**
-
-You’ve earned that discipline now.
-
----
-
-# ✅ WHAT TO DO RIGHT NOW (FINAL CHECKLIST)
-
-Before closing today:
-
-1. Tag release (`v1.0.0-airflow-prod`)
-2. Update README
-3. Add 2 GitHub issues
-4. Push everything
-5. Stop coding today
-
-Tomorrow (1 hour only):
-
-* Start **Backfill phase** OR **Config-driven sources**
-
----
-
-When you’re ready tomorrow, just say:
-
-* **“BACKFILL”** or
-* **“CONFIG SOURCES”**
-
-I will guide you **step-by-step, safely, without breaking v1**.
-
-You did great.
-This is a **real production data engineering project** now.
-
-
-###================================================================v1.1.0-backfill===============================================###
-git checkout -b v1.1.0-backfill
-.....
-git tag -a v1.1.0-backfill -m "Backfill + config-driven sources"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-====================================================================================================================================================================================
-on local:
-
-C:\Users\Shivam Gupta\OneDrive\Documents\Shivam_Developement\external_data_ingestion_pipeline>type "%USERPROFILE%\.ssh\id_ed25519"
------BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-QyNTUxOQAAACBcPOhe1gWRashG36FvLjk3NqzJy+7AXf5AuirWJ92TNwAAAJhwBPDpcATw
-6QAAAAtzc2gtZWQyNTUxOQAAACBcPOhe1gWRashG36FvLjk3NqzJy+7AXf5AuirWJ92TNw
-AAAEB/66uDk8m6ziy9O59IH9RWEKVCxvnf8BFf/zEAnbkyb1w86F7WBZFqyEbfoW8uOTc2
-rMnL7sBd/kC6KtYn3ZM3AAAADmdpdGh1Yi1hY3Rpb25zAQIDBAUGBw==
------END OPENSSH PRIVATE KEY-----
-
-C:\Users\Shivam Gupta\OneDrive\Documents\Shivam_Developement\external_data_ingestion_pipeline>type "%USERPROFILE%\.ssh\id_ed25519.pub"
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFw86F7WBZFqyEbfoW8uOTc2rMnL7sBd/kC6KtYn3ZM3 github-actions
-
-
-C:\Users\Shivam Gupta\OneDrive\Documents\Shivam_Developement\external_data_ingestion_pipeline>type "%USERPROFILE%\.ssh\github_actions_key"
------BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-QyNTUxOQAAACDFrwZOFI+zWxOhjvPSHGqkIMYtgRxKGSG86Mjs1aqmXgAAAJh+kYXifpGF
-4gAAAAtzc2gtZWQyNTUxOQAAACDFrwZOFI+zWxOhjvPSHGqkIMYtgRxKGSG86Mjs1aqmXg
-AAAECY5GOdsC7cWahVP8NLC9JsumvyYoewZHiqldXIktzY7cWvBk4Uj7NbE6GO89IcaqQg
-xi2BHEoZIbzoyOzVqqZeAAAADmdpdGh1Yi1hY3Rpb25zAQIDBAUGBw==
------END OPENSSH PRIVATE KEY-----
-
-
-C:\Users\Shivam Gupta\OneDrive\Documents\Shivam_Developement\external_data_ingestion_pipeline>type "github_actions_key.pub"
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC8IF7Xo/ymbNsNpPjkWHMM70k7rxYpitm540VI8tjOI github-actions
-
-
-
-======================================================================================================================================================================================================
-on ec2:
-[ec2-user@ip-172-31-13-120 .ssh]$ cd .ssh
--bash: cd: .ssh: No such file or directory
-[ec2-user@ip-172-31-13-120 .ssh]$ ls
-authorized_keys  id_ed25519  id_ed25519.pub  known_hosts
-[ec2-user@ip-172-31-13-120 .ssh]$ sudo nano authorized_keys
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFw86F7WBZFqyEbfoW8uOTc2rMnL7sBd/kC6KtYn3ZM3 github-actions
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC8IF7Xo/ymbNsNpPjkWHMM70k7rxYpitm540VI8tjOI github-actions
-[ec2-user@ip-172-31-13-120 .ssh]$ sudo nano id_ed25519
------BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-QyNTUxOQAAACBcPOhe1gWRashG36FvLjk3NqzJy+7AXf5AuirWJ92TNwAAAJhwBPDpcATw
-6QAAAAtzc2gtZWQyNTUxOQAAACBcPOhe1gWRashG36FvLjk3NqzJy+7AXf5AuirWJ92TNw
-AAAEB/66uDk8m6ziy9O59IH9RWEKVCxvnf8BFf/zEAnbkyb1w86F7WBZFqyEbfoW8uOTc2
-rMnL7sBd/kC6KtYn3ZM3AAAADmdpdGh1Yi1hY3Rpb25zAQIDBAUGBw==
------END OPENSSH PRIVATE KEY-----
-[ec2-user@ip-172-31-13-120 .ssh]$ sudo nano id_ed25519.pub
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFw86F7WBZFqyEbfoW8uOTc2rMnL7sBd/kC6KtYn3ZM3 github-actions
-[ec2-user@ip-172-31-13-120 .ssh]$ sudo nano known_hosts
-ec2-15-206-212-247.ap-south-1.compute.amazonaws.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHWKDMCITLHqwJv3+U91CnVnrQ0KqKjP>
-
-
-
-
-
-git commit --allow-empty -m "fix ssh auth for github actions"
-git push origin main
-
-ssh -i github_actions_key ec2-user@43.204.235.11  
-
-
-
-
-
---------------------------------------------------------------------------------
-2️⃣ RESUME BULLETS (STRONG & HONEST)
-
-Use 2–3 bullets, not more.
-
-Option A – Mid / Senior Data Engineer
-
-Designed and implemented a production-grade external data ingestion platform using Apache Airflow, supporting multi-source ingestion, backfill, and data quality enforcement.
-
-Built a config-driven pipeline architecture with failure isolation, retries, observability (logs, metrics, alerts), and secure credential handling.
-
-Enabled analytics consumption by landing data in S3 and integrating with Athena/Snowflake and Apache Superset dashboards.
-
-Option B – Platform / Analytics Engineer
-
-Built and owned an enterprise-style data platform to ingest external data from APIs, databases, and files, powering internal analytics dashboards.
-
-Implemented data quality checks, schema safeguards, and incident alerting to ensure reliability and auditability.
-
-Integrated CI/CD, operational runbooks, and monitoring to support 24×7 production workloads.
-
-3️⃣ INTERVIEW Q&A (REAL QUESTIONS, REAL ANSWERS)
-Q1: Is this a product or a service?
-
-Answer:
-This is an internal data platform service. It’s not a customer-facing product, but a production system used by internal teams to power analytics and decision-making.
-
-Q2: Who are the end users?
-
-Answer:
-The direct users are data engineers and analysts. Business users consume the output indirectly through dashboards built in Superset.
-
-Q3: How do you handle failures?
-
-Answer:
-Failures are isolated per source. We retry transient errors, alert via Slack, and optionally create incidents for tracking. One failing source does not block others.
-
-Q4: How is data quality enforced?
-
-Answer:
-We run configurable quality checks after ingestion, supporting soft and hard failures. This allows us to protect downstream analytics without unnecessarily blocking ingestion.
-
-Q5: How do you support backfill?
-
-Answer:
-Backfill is configuration-driven. The same ingestion logic is reused for historical dates, ensuring consistency and avoiding duplication.
-
-Q6: How do you make it production-ready?
-
-Answer:
-By combining CI/CD, secure credential handling, observability, runbooks, and analytics integration. Production is about operations, not just code.
-
-Q7: Why Airflow?
-
-Answer:
-Airflow provides reliable scheduling, retries, visibility, and operational control, which are critical for long-running data platforms.
-
-4️⃣ VERY IMPORTANT: WHAT HAPPENS NEXT (IMPLEMENTATION & EXECUTION)
-
-You are 100% correct to ask this 👇
-
-“You explained everything — but how do I actually implement and run it from scratch?”
-
-✅ YES — NEXT PHASE WILL DO EXACTLY THAT
-
-After this point, we will:
-
-Start from an empty repo
-
-Create folders one by one
-
-Write every file
-
-Install dependencies
-
-Configure environment variables
-
-Run Airflow locally / on EC2
-
-Trigger DAGs
-
-Verify S3 output
-
-Validate dashboards
-
-In other words:
-
-👉 We will implement & execute the entire platform step-by-step, like onboarding a new engineer in a real company.
