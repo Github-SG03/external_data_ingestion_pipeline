@@ -1,6 +1,6 @@
 import os
 import requests
-from src.pipeline.logging import get_logger
+from pipeline.logging import get_logger
 
 logger = get_logger("SlackNotifier")
 
