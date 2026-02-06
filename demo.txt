@@ -341,10 +341,37 @@ You did great.
 This is a **real production data engineering project** now.
 
 
+<<<<<<< feature/final-setup
 ###================================================================v1.1.0-backfill===============================================###
 git checkout -b v1.1.0-backfill
 .....
 git tag -a v1.1.0-backfill -m "Backfill + config-driven sources"
+=======
+
+
+#ssh -i "%USERPROFILE%\.ssh\external-data-ingestion-key.pem" ec2-user@13.204.82.83(Terminal 1-EC2)
+#cd external_data_ingestion_pipeline
+#source ~/airflow_env/bin/activate
+#export AIRFLOW_HOME=~/airflow
+#export PYTHONPATH=~/airlow/src
+#export ENV=dev
+#airflow variables get SLACK_WEBHOOK
+
+#pkill -9 -f airflow || true
+#pkill -9 -f gunicorn || true
+#pkill -9 -f uvicorn || true
+#sleep 5
+
+#ps aux | grep airflow | grep -v grep --Verify Airflow processes
+#ss -lntp | grep 8080 --Verify port is listening
+#curl http://localhost:8080/api/v2/health
+#airflow dags list-import-errors
+#airflow dags list | grep external_data_ingestion
+#airflow dags list-runs external_data_ingestion
+#airflow dags trigger external_data_ingestion
+#airflow tasks state external_data_ingestion run_external_ingestion__2025-12-28T14:40:09.934614+00:00_z8YHdRAY
+#aws s3 ls s3://sgs-dev-data-bucket/github/date=YYYY-MM-DD/
+>>>>>>> local
 
 
 
